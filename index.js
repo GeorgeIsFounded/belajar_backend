@@ -5,19 +5,19 @@ const dayjs = require('dayjs');
 const app = express();
 const routers = require('./src/routes/index.js');
 const authMiddleware = require('./src/controllers/authmidleware');
-const notFound = require("./src/controllers/404");
-require('dotenv').config()
-const bodyParser = require("body-parser");
+const notFound = require('./src/controllers/404');
+const { sequelize } = require('./src/models');
+require('dotenv').config();
+const bodyParser = require('body-parser');
 
 app.use(express.json()); // == == == == Middleware agar dapat menangkap JSON pada body request di postman
 // app.use(authMiddleware)
 // app.use(console2middleware);
 // app.use(console1middleware);
 // app.use(bodyParser.json()); // == == == == Middleware agar dapat menangkap JSON pada body request di postman
-app.use(express.static("storage/uploads"))
+app.use(express.static('storage/uploads'));
 app.use(routers);
 app.use(notFound);
-
 
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
@@ -28,7 +28,6 @@ const server = http.createServer((req, res) => {
   //   res.write(dayjs().format('2023-01-10 13-30-30 '));
   //   res.write('Hello Madinatul Quran ');
   //   res.write(cekBilangan(1));
-
 
   // MENAMPILKAN RESPONSE DENGAN DATA JSON =================>
 
@@ -107,6 +106,12 @@ const port = 8088;
 //   });
 // });
 
-app.listen(port, () =>
-  console.log(`Server berjalan di http://localhost:${port}`)
-);
+app.listen(port, async () => {
+  try {
+    await sequelize.authenticate();
+    console.log(`Server berjalan di http://localhost:${port}`);
+    console.log('Connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+});
