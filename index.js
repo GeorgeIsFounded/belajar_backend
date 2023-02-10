@@ -4,11 +4,13 @@ const { smk, cekBilangan } = require('./example');
 const dayjs = require('dayjs');
 const app = express();
 const routers = require('./src/routes/index.js');
-const authMiddleware = require('./src/controllers/authmidleware');
-const notFound = require('./src/controllers/404');
+const authMiddleware = require('./src/middleware/authmidleware');
+const notFound = require('./src/middleware/404');
 const { sequelize } = require('./src/models');
 require('dotenv').config();
 const bodyParser = require('body-parser');
+const paginationMiddleware = require('./src/middleware/paginationMiddleware')
+
 
 app.use(express.json()); // == == == == Middleware agar dapat menangkap JSON pada body request di postman
 // app.use(authMiddleware)
@@ -16,6 +18,7 @@ app.use(express.json()); // == == == == Middleware agar dapat menangkap JSON pad
 // app.use(console1middleware);
 // app.use(bodyParser.json()); // == == == == Middleware agar dapat menangkap JSON pada body request di postman
 app.use(express.static('storage/uploads'));
+app.use(paginationMiddleware)
 app.use(routers);
 app.use(notFound);
 
