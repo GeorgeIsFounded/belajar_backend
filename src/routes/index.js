@@ -23,7 +23,7 @@ const userValidator = require('../validators/userValidator');
 const validationResultMiddleware = require('../middleware/validationResultMiddleware');
 const createUserValidator = require('../validators/userValidator');
 const tambahProdukValidator = require('../validators/produkValidator');
-const { register, login, lupaPassword, resetPassword } = require('../controller/AuthControllers');
+// const { register, login, lupaPassword, resetPassword } = require('../controller/AuthControllers');
 const {
   jwtValidateMiddleware,
 } = require('../middleware/JwtValidateMiddleware');
@@ -36,12 +36,24 @@ const {
   createArtikelMulti,
   deleteArtikelBulk,
 } = require('../controller/ArtikelControllers');
+const { register, login } = require('../controller/usersController');
+const {
+  createMateriMulti,
+  updateMateri,
+  deleteMateri,
+  listMateriGuru,
+  listMateriSiswa,
+} = require('../controller/materiController');
 
 //auth
-routers.post('/login', login);
+// routers.post('/login', login);
+// routers.post('/register', register);
+// routers.post('/lupa-password', lupaPassword);
+// routers.post('/reset-password/:userId/:token', resetPassword);
+
+//EVALUASI
 routers.post('/register', register);
-routers.post('/lupa-password', lupaPassword);
-routers.post('/reset-password/:userId/:token', resetPassword);
+routers.post('/login', login);
 
 // JWT MIDDLEWARE
 routers.use(jwtValidateMiddleware);
@@ -75,5 +87,12 @@ routers.get('/produk/detail/:id', getDetailProdukById);
 routers.get('/produk/list/:namaProduk', getDetailProdukByParams);
 routers.put('/produk/update/:id', updateProduk);
 routers.delete('/produk/delete/:id', deleteProduk);
+
+//materi
+routers.post('/materi/createMulti', createMateriMulti);
+routers.put('/materi/update/:id', updateMateri);
+routers.delete('/materi/delete/multi', deleteMateri);
+routers.get('/materi/guru', listMateriGuru);
+routers.get('/materi/siswa', listMateriSiswa);
 
 module.exports = routers;

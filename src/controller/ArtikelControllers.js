@@ -3,7 +3,16 @@ const { Op } = require('sequelize');
 const ArtikelModel = require('../models').artikel;
 
 async function listArtikel(req, res) {
-  const { keyword, year, offset, tittle, page, pageSize, sortBy = 'id', orderBy = 'desc' } = req.query;
+  const {
+    keyword,
+    year,
+    offset,
+    tittle,
+    page,
+    pageSize,
+    sortBy = 'id',
+    orderBy = 'desc',
+  } = req.query;
 
   const artikel = await ArtikelModel.findAndCountAll({
     // EXCLUDE (Jika ada yg ingin tidak di tampilkan)
@@ -52,12 +61,13 @@ async function listArtikel(req, res) {
       pagination: {
         currentPage: page,
         pageSize: pageSize,
-        totalData: artikel.count
+        totalData: artikel.count,
       },
       data: artikel,
       query: {
-        page, pageSize
-      }
+        page,
+        pageSize,
+      },
     });
   } catch {
     res.status(403).json({
@@ -228,10 +238,6 @@ async function deleteArtikelBulk(req, res) {
           where: { id: items.id },
         });
         if (title.userId !== req.id) {
-          // return res.json({
-          //   status: "Fail",
-          //   msg: `You can't delete the article`,
-          // });
           return (fail = fail + 1);
         }
         await ArtikelModel.destroy({
